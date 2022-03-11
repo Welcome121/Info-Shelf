@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Home from './pages/Home'
+import Orders from './pages/Orders';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';  
+import { makeStyles } from '@mui/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import deepPurple from '@material-ui/core/colors/deepPurple';
+import blue from '@material-ui/core/colors/blue';
+
+const useStyles = makeStyles({
+  root: {
+   }
+})
 
 function App() {
+  const classes = useStyles()
+  const theme = createTheme({
+    palette: {
+      primary: {
+        light: deepPurple[200],
+        main: deepPurple[500],
+        dark: deepPurple[800],
+      },
+      secondary: {
+        light: blue[100],
+        main: blue[500],
+        dark: blue[900]
+      },
+    }
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/orders" element={<Orders />}/>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
