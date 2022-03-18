@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
-import deepPurple from '@material-ui/core/colors/deepPurple';
 import blue from '@material-ui/core/colors/blue';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,9 +11,12 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import Typography from '@material-ui/core/Typography';
 import TablePagination from '@material-ui/core/TablePagination';
-import TableFooter from '@material-ui/core/TableFooter';
+import { useSelector, useDispatch } from 'react-redux'
+import Popup from './Popup'
+import OrderForm from '../pages/Orders/OrderForm'
 
   const useStyles = makeStyles((theme) => ({
     buttonMargin: {
@@ -29,6 +31,7 @@ import TableFooter from '@material-ui/core/TableFooter';
       margin: '10px 0px'
     },
     toolBar: {
+      backgroundColor: blue[100],
       display: 'flex',
       justifyContent: 'space-between'
     },
@@ -36,7 +39,7 @@ import TableFooter from '@material-ui/core/TableFooter';
       minWidth: 700,
     },
     tableRow: {
-      backgroundColor: deepPurple[500],
+      backgroundColor: blue[900],
       "& th": {
         fontWeight: 'bold',
         color: blue[100]
@@ -50,41 +53,23 @@ import TableFooter from '@material-ui/core/TableFooter';
       padding: '3px 10px',
       display: 'inline-block'
     },
-  }));
-
-const rows = [
-    {
-        id: '0', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-    },
-    {
-        id: '1', status:'finalizado', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-    },
-    {
-        id: '2', status:'finalizado', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-    },
-    {
-        id: '3', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-    },
-    {
-      id: '4', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-  },
-  {
-    id: '5', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-},
-{
-  id: '6', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-},
-{
-  id: '7', status:'em andamento', funcionario:'cleiton da silva', cliente: 'Arthur', expedicao: '01/01/2022', validade: '10/01/2022', prioridade: '3'
-},
-]
+    pageContent: {
+      margin: theme.spacing(5),
+      padding: theme.spacing(3)
+    }
+  })); 
 
 export default function OrdersTable() {
     const classes = useStyles()
 
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [dataCriacao, setDC] = useState(null)
+    const [dataInicio, setDI] = useState(null)
+    const [openPopup, setOpenPopup] = useState(false)
+    const rows = useSelector((state) => state.orders.array)
+    const dispatch = useDispatch()
+
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
     };
@@ -94,12 +79,18 @@ export default function OrdersTable() {
       setPage(0);
     };
 
+    const handleNewOrder = async (event) => {
+
+      setOpenPopup(true)
+    }
+
     return (
       <div className={classes.margin}>
           <Button
             variant="contained"
             color="primary"
             className={classes.buttonMargin}
+            onClick={ handleNewOrder }
           >
             CRIAR ORDEM DE SERVIÇO
           </Button>
@@ -121,27 +112,19 @@ export default function OrdersTable() {
               {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
                 <TableRow key={row.id}>
                   <TableCell align='center'>{row.id}</TableCell>
-                  <TableCell align='center'>
-                    <Typography 
-                      className={classes.status}
-
-                      style={{
-                        backgroundColor:
-                        ((row.status === 'em andamento' && 'orange') ||
-                        (row.status === 'finalizado' && 'green')),
-                        width: '100%'
-                      }}
-                    > {row.status} </Typography>
-                  </TableCell>
-                  <TableCell align='center'>{row.funcionario}</TableCell>
-                  <TableCell align='center'>{row.cliente}</TableCell>
-                  <TableCell align='center'>{row.expedicao}</TableCell>
-                  <TableCell align='center'>{row.validade}</TableCell>
+                  <TableCell align='center'>{ null }</TableCell>
+                  <TableCell align='center'>{row.funcionario.nome}</TableCell>
+                  <TableCell align='center'>{row.cliente.nome}</TableCell>
+                  <TableCell align='center'>{ null }</TableCell>
+                  <TableCell align='center'>{ null }</TableCell>
                   <TableCell align='center'>{row.prioridade}</TableCell>
 
                   <TableCell align='center'>
+                    <IconButton aria-label="edit">
+                      <EditIcon color="primary"/>
+                    </IconButton>
                     <IconButton aria-label="delete">
-                      <DeleteIcon/>
+                      <DeleteIcon color="secondary"/>
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -175,6 +158,14 @@ export default function OrdersTable() {
               />
           </div>
         </TableContainer>
+        <Popup
+          openPopup = {openPopup}
+          setOpenPopup = {setOpenPopup}
+        >
+          <Paper className={classes.pageContent}>
+            <OrderForm />
+          </Paper>
+        </Popup>
       </div>
     )
 }

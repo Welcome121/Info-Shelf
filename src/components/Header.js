@@ -20,7 +20,7 @@ function Header() {
             <AppBar position="fixed" >
                 <Toolbar className={ classes.toolBar }>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} className={classes.typography}>
-                        INOVIA - INFO SHOW
+                        INFO SHELF
                     </Typography>
                 </Toolbar>
             </AppBar>
