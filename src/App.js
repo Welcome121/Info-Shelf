@@ -81,7 +81,7 @@ function App() {
           <main className = { classes.main }>
             <Container maxWidth="lg">
               <Box display="flex">
-                <div><Navbar setProps={ setTable } propsValue={ table }/></div>
+                <div><Navbar setProps={ setTable }/></div>
                 {
                   (table === '' && <Title />) ||
                   (table === 'serviceOrders' && <Orders />) ||
