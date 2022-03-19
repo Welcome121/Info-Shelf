@@ -28,7 +28,7 @@ export default function Customers () {
         TblContainer,
         TblHead,
         TblPagination,
-        recordsAfterPagingAndSorting,
+        recordsAfterPaging,
     } = useTable(records, headCells)
 
     return (
@@ -39,7 +39,7 @@ export default function Customers () {
                 <TblHead />
                 <TableBody>
                     {
-                        recordsAfterPagingAndSorting().map(item => (
+                        recordsAfterPaging().map(item => (
                             <TableRow key={item.id}>
                                 <TableCell align='center'>{item.nome}</TableCell>
                                 <TableCell align='center'>{item.email}</TableCell>

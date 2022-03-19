@@ -45,7 +45,7 @@ export default function Orders() {
         TblContainer,
         TblHead,
         TblPagination,
-        recordsAfterPagingAndSorting,
+        recordsAfterPaging,
     } = useTable(records, headCells)
 
     const newOrder = (order) => {
@@ -77,22 +77,22 @@ export default function Orders() {
                 <TblHead />
                 <TableBody>
                     {
-                        recordsAfterPagingAndSorting().map(item => (
+                        recordsAfterPaging().map(item => (
                             <TableRow key={item.id}>
                                 <TableCell align='center'>{records.findIndex(x => x.id === item.id)}</TableCell>
                                 {
-                                    ((item.timestamp_inicio + item.tempo_estimado * 60) < dateNow && <TableCell align='center'>Finalizada</TableCell>) ||
-                                    ((item.timestamp_inicio + item.tempo_estimado * 60) > dateNow && <TableCell align='center'>Atribuida</TableCell>)
+                                    ((item.timestamp_inicio + item.tempo_estimado * 60) < dateNow && <TableCell align='center'><Controls.highLights title="FINALIZADA" backColor="green" /></TableCell>) ||
+                                    ((item.timestamp_inicio + item.tempo_estimado * 60) > dateNow && <TableCell align='center'><Controls.highLights title="ATRIBUIDA" backColor="orange" /></TableCell>)
                                 }
                                 <TableCell align='center'>{item.funcionario.nome}</TableCell>
                                 <TableCell align='center'>{item.cliente.nome}</TableCell>
                                 <TableCell align='center'>{dates_criation[records.findIndex(x => x.id === item.id)]}</TableCell>
                                 <TableCell align='center'>{dates_start[records.findIndex(x => x.id === item.id)]}</TableCell>
                                 {
-                                    (item.prioridade === 1) && (<TableCell align='center'>BAIXA</TableCell>) ||
-                                    (item.prioridade === 2) && (<TableCell align='center'>MÉDIA</TableCell>) ||
-                                    (item.prioridade === 3) && (<TableCell align='center'>ALTA</TableCell>) ||
-                                    (item.prioridade === 4) && (<TableCell align='center'>URGENTE</TableCell>) 
+                                    (item.prioridade === 1) && (<TableCell align='center'><Controls.highLights title="BAIXA" backColor="green" /></TableCell>) ||
+                                    (item.prioridade === 2) && (<TableCell align='center'><Controls.highLights title="MÉDIA" backColor="blue" /></TableCell>) ||
+                                    (item.prioridade === 3) && (<TableCell align='center'><Controls.highLights title="ALTA" backColor="orange" /></TableCell>) ||
+                                    (item.prioridade === 4) && (<TableCell align='center'><Controls.highLights title="URGENTE" backColor="red" /></TableCell>) 
                                 }
                                 <TableCell align='center'>
                                     <IconButton aria-label="edit">

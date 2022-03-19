@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import Title from './components/Title'
-import OrdersTable from './components/OrdersTable'
 import Header from './components/Header'
 import Navbar from './components/Navbar';  
 import { makeStyles } from '@mui/styles';
