@@ -23,7 +23,9 @@ const tables = [
     {id: 2, name: 'Clientes'}
 ]
 
-export default function Navbar({ setProps, propsValue }) {
+export default function Navbar(props) {
+
+    const { setProps } = props
     const classes = useStyles()
 
     const [value, setValue] = React.useState('null')
